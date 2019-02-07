@@ -81,10 +81,10 @@ class GUIApp:
 
     def getNameInfo(self):
         try:
-            self.interviewerName = self.interviewerNameInput.get()
-            self.intervieweeName = self.intervieweeNameInput.get()
-            self.irSMWCName = self.irSMWCNameInput.get()
-            self.ieSMWCName = self.ieSMWCNameInput.get()
+            self.interviewerName = re.escape(self.interviewerNameInput.get())
+            self.intervieweeName = re.escape(self.intervieweeNameInput.get())
+            self.irSMWCName = re.escape(self.irSMWCNameInput.get())
+            self.ieSMWCName = re.escape(self.ieSMWCNameInput.get())
             self.interviewerColor = self.interviewerColorInput.get()
             self.intervieweeColor = self.intervieweeColorInput.get()
             if self.interviewerName == '' or self.intervieweeName == '' or self.irSMWCName == '' or self.ieSMWCName == '' or self.interviewerColor == '' or self.intervieweeColor == '':
@@ -117,6 +117,10 @@ class GUIApp:
             # Format all URLs to be SMWC post ready
             out = urlPattern.sub(formatter.urlformat, text)
             # print(out)
+            out = re.sub(self.interviewerName, self.irSMWCName, out)
+            out = re.sub(self.intervieweeName, self.ieSMWCName, out)
+
+            # Copy formatted output to the clipboard
             self.root.clipboard_clear()
             self.root.clipboard_append(out)
             # Clear the output box and print the formatted output text to the box
