@@ -21,6 +21,7 @@ class GUIApp:
         # End with mainloop() to keep window persistent
         self.root = tk.Tk()
         self.root.title('Discord Interview Formatter')
+        self.root.resizable(False, False)
 
         # Need boxes for username formatters
         # [color=#660066][/color]
@@ -52,25 +53,24 @@ class GUIApp:
         # Bind a function to the button that activates on left click(<Button-1>)
         formatButton.bind("<Button-1>", lambda inputText: self.formatText(self.text1.get("1.0", tk.END)))
 
+        # Name formatters
         interviewer.grid(row=0, column=0)
         self.interviewerNameInput.grid(row=0, column=1, sticky="W")
         interviewee.grid(row=1, column=0)
         self.intervieweeNameInput.grid(row=1, column=1, sticky="W")
-
         irSMWC.grid(row=0, column=2)
         self.irSMWCNameInput.grid(row=0, column=3)
         ieSMWC.grid(row=1, column=2)
         self.ieSMWCNameInput.grid(row=1, column=3)
-
         interviewerColor.grid(row=0, column=4, sticky="W")
         self.interviewerColorInput.grid(row=0, column=5, sticky="W")
         intervieweeColor.grid(row=1, column=4, sticky="W")
         self.intervieweeColorInput.grid(row=1, column=5, sticky="W")
 
-        # sticky=n, e, s, or w for align inside the grid
-        title.grid(row=2, column=1)
+        # Text box formatters
+        title.grid(row=2, column=2)
         self.text1.grid(row=3, column=0, columnspan=6, sticky="NSEW")
-        formatButton.grid(row=4, column=1, sticky="NE")
+        formatButton.grid(row=4, column=2, sticky="NE")
         self.text2.grid(row=5, column=0, columnspan=6, sticky="NSEW")
 
         self.root.rowconfigure(3, weight=1)
@@ -83,8 +83,8 @@ class GUIApp:
         try:
             self.interviewerName = re.escape(self.interviewerNameInput.get())
             self.intervieweeName = re.escape(self.intervieweeNameInput.get())
-            self.irSMWCName = re.escape(self.irSMWCNameInput.get())
-            self.ieSMWCName = re.escape(self.ieSMWCNameInput.get())
+            self.irSMWCName = self.irSMWCNameInput.get()
+            self.ieSMWCName = self.ieSMWCNameInput.get()
             self.interviewerColor = self.interviewerColorInput.get()
             self.intervieweeColor = self.intervieweeColorInput.get()
             if self.interviewerName == '' or self.intervieweeName == '' or self.irSMWCName == '' or self.ieSMWCName == '' or self.interviewerColor == '' or self.intervieweeColor == '':
@@ -92,10 +92,9 @@ class GUIApp:
                 self.text2.delete('1.0', tk.END)
                 self.text2.insert(tk.INSERT, err)
                 raise Exception(err)
-            print("Interviewer: " + self.interviewerName)
-            print("Color: " + self.interviewerColor)
-            print("Interviewee: " + self.intervieweeName)
-            print("Color: " + self.intervieweeColor)
+            # [color=#660066][/color]
+            self.irSMWCName = '[color=#' + self.interviewerColor + ']' + self.irSMWCName + '[/color]:'
+            self.ieSMWCName = '[color=#' + self.intervieweeColor + ']' + self.ieSMWCName + '[/color]:'
         except Exception as e:
             print('Exception: ' + str(e))
             raise Exception(str(e))
@@ -117,8 +116,9 @@ class GUIApp:
             # Format all URLs to be SMWC post ready
             out = urlPattern.sub(formatter.urlformat, text)
             # print(out)
-            out = re.sub(self.interviewerName, self.irSMWCName, out)
-            out = re.sub(self.intervieweeName, self.ieSMWCName, out)
+
+            out = re.sub('(?m)^'+self.interviewerName+':', self.irSMWCName, out)
+            out = re.sub('(?m)^'+self.intervieweeName+':', self.ieSMWCName, out)
 
             # Copy formatted output to the clipboard
             self.root.clipboard_clear()
