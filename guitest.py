@@ -2,11 +2,6 @@ import re
 import tkinter as tk
 import tkinter.scrolledtext as tkst
 
-N = tk.N
-S = tk.S
-E = tk.E
-W = tk.W
-
 
 class HTMLFormatter:
     def __init__(self):
@@ -37,7 +32,8 @@ def formatText(inputText):
     # print(out)
     root.clipboard_clear()
     root.clipboard_append(out)
-    # Print formatted output text to a second text box
+    # Clear the output box and print the formatted output text to the box
+    scrollText2.delete('1.0', tk.END)
     scrollText2.insert(tk.INSERT, out)
 
 
@@ -59,11 +55,11 @@ scrollText2 = tkst.ScrolledText(master=frame2, wrap=tk.WORD)
 
 # sticky=n, e, s, or w for align inside the grid
 title.grid(row=0, column=1)
-frame1.grid(row=1, column=1, sticky=N+S+E+W)
-scrollText1.grid(row=1, column=1, sticky=N+S+E+W)
-formatButton.grid(row=2, column=1, sticky=N)
-frame2.grid(row=3, column=1, sticky=N+S+E+W)
-scrollText2.grid(row=3, column=1, sticky=N+S+E+W)
+frame1.grid(row=1, column=1, sticky="NSEW")
+scrollText1.grid(row=1, column=1, sticky="NSEW")
+formatButton.grid(row=2, column=1, sticky=tk.N)
+frame2.grid(row=3, column=1, sticky="NSEW")
+scrollText2.grid(row=3, column=1, sticky="NSEW")
 
 root.rowconfigure(1, weight=1)
 root.rowconfigure(3, weight=1)
