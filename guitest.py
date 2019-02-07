@@ -1,5 +1,11 @@
-from tkinter import *
-# Import all tkinter classes
+import re
+import tkinter as tk
+import tkinter.scrolledtext as tkst
+
+N = tk.N
+S = tk.S
+E = tk.E
+W = tk.W
 
 
 class HTMLFormatter:
@@ -28,29 +34,39 @@ def formatText(inputText):
     inputText = timestampPattern.sub(formatter.tsformat, inputText)
     # Format all URLs to be SMWC post ready
     out = urlPattern.sub(formatter.urlformat, inputText)
-    print(out)
+    # print(out)
     root.clipboard_clear()
     root.clipboard_append(out)
+    # Print formatted output text to a second text box
+    scrollText2.insert(tk.INSERT, out)
 
 
 # Create new window
 # End with mainloop() to keep window persistent
-root = Tk()
+root = tk.Tk()
 textToCopy = ''
 
 # title = Label(root, text="GUI Tests", bg="grey", fg="white")
-title = Label(root, text="Text Input")
-inputEntry = Text(root)
-formatButton = Button(root, text="Format text", fg="grey")
+title = tk.Label(root, text="Text Input")
+frame1 = tk.Frame(master=root, bg='grey')
+scrollText1 = tkst.ScrolledText(master=frame1, wrap=tk.WORD)
+formatButton = tk.Button(root, text="Format text", fg="grey")
 # Bind a function to the button that activates on left click(<Button-1>)
-formatButton.bind("<Button-1>", lambda inputText: formatText(inputEntry.get("1.0", END)))
+formatButton.bind("<Button-1>", lambda inputText: formatText(scrollText1.get("1.0", tk.END)))
+
+frame2 = tk.Frame(master=root, bg='grey')
+scrollText2 = tkst.ScrolledText(master=frame2, wrap=tk.WORD)
 
 # sticky=n, e, s, or w for align inside the grid
 title.grid(row=0, column=1)
-inputEntry.grid(row=1, column=1, sticky=N+S+E+W)
+frame1.grid(row=1, column=1, sticky=N+S+E+W)
+scrollText1.grid(row=1, column=1, sticky=N+S+E+W)
 formatButton.grid(row=2, column=1, sticky=N)
+frame2.grid(row=3, column=1, sticky=N+S+E+W)
+scrollText2.grid(row=3, column=1, sticky=N+S+E+W)
 
 root.rowconfigure(1, weight=1)
+root.rowconfigure(3, weight=1)
 root.columnconfigure(1, weight=1)
 
 # Allows window to persist
