@@ -11,7 +11,7 @@ class HTMLFormatter:
         return ''
 
     def urlformat(self, matchobject):
-        self.url = '[url=' + matchobject.group(0) + ']INSERT TEXT HERE[/url]'
+        self.url = '[url=' + matchobject.group(0) + ']' + matchobject.group(0) + '[/url]'
         return str(self.url)
 
 
@@ -115,8 +115,8 @@ class GUIApp:
             text = timestampPattern.sub(formatter.tsformat, inputText)
             # Format all URLs to be SMWC post ready
             out = urlPattern.sub(formatter.urlformat, text)
-            # print(out)
 
+            # Replaces the names of the interviewer and interviewee correctly.
             out = re.sub('(?m)^'+self.interviewerName+':', self.irSMWCName, out)
             out = re.sub('(?m)^'+self.intervieweeName+':', self.ieSMWCName, out)
 
